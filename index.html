@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch XML to Table</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>XML Data</h1>
+    <table id="xmlTable">
+        <thead>
+            <tr id="tableHeader">
+                <!-- Table headers will be dynamically added -->
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            <!-- Table data will be dynamically added -->
+        </tbody>
+    </table>
+
+    <script>
+        function fetchXMLContent(url, callback) {
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(xmlText => {
+                    callback(null, xmlText);
+                })
+                .catch(error => {
+                    console.error(`There was a problem with the fetch operation:`, error);
+                    callback(error, null);
+                });
+        }
+
+        function displayXMLInTable(xmlText) {
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+
+            const users = xmlDoc.getElementsByTagName('user');
+            const tableHeader = document.getElementById('tableHeader');
+            const tableBody = document.getElementById('tableBody');
+
+            if (users.length > 0) {
+                // Create table headers dynamically based on the first user element
+                const firstUser = users[0];
+                for (let i = 0; i < firstUser.children.length; i++) {
+                    const th = document.createElement('th');
+                    th.textContent = firstUser.children[i].tagName;
+                    tableHeader.appendChild(th);
+                }
+
+                // Add rows for each user
+                for (let i = 0; i < users.length; i++) {
+                    const tr = document.createElement('tr');
+                    const user = users[i];
+
+                    for (let j = 0; j < user.children.length; j++) {
+                        const td = document.createElement('td');
+                        td.textContent = user.children[j].textContent;
+                        tr.appendChild(td);
+                    }
+
+                    tableBody.appendChild(tr);
+                }
+            } else {
+                tableBody.innerHTML = '<tr><td colspan="100%">No data available</td></tr>';
+            }
+        }
+
+        fetchXMLContent('https://codetogo.io/api/users.xml', function(error, xmlText) {
+            if (!error && xmlText) {
+                displayXMLInTable(xmlText);
+            }
+        });
+    </script>
+</body>
+</html>
