@@ -1,0 +1,10 @@
+<users>
+    <user>
+        <id>1</id>
+        <name>Alex</name>
+    </user>
+    <user>
+        <id>2</id>
+        <name>Sam</name>
+    </user>
+</users>
