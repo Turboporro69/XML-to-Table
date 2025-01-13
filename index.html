@@ -27,11 +27,9 @@
     <table id="xmlTable">
         <thead>
             <tr id="tableHeader">
-                <!-- Table headers will be dynamically added -->
             </tr>
         </thead>
         <tbody id="tableBody">
-            <!-- Table data will be dynamically added -->
         </tbody>
     </table>
 
@@ -62,7 +60,6 @@
             const tableBody = document.getElementById('tableBody');
 
             if (users.length > 0) {
-                // Create table headers dynamically based on the first user element
                 const firstUser = users[0];
                 for (let i = 0; i < firstUser.children.length; i++) {
                     const th = document.createElement('th');
@@ -70,7 +67,6 @@
                     tableHeader.appendChild(th);
                 }
 
-                // Add rows for each user
                 for (let i = 0; i < users.length; i++) {
                     const tr = document.createElement('tr');
                     const user = users[i];
@@ -88,7 +84,7 @@
             }
         }
 
-        fetchXMLContent('https://codetogo.io/api/users.xml', function(error, xmlText) {
+        fetchXMLContent('users.xml', function(error, xmlText) {
             if (!error && xmlText) {
                 displayXMLInTable(xmlText);
             }
